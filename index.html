@@ -150,7 +150,7 @@
       <ul class="nav__links">
         <li><a href="#sobre-mi">Sobre mí</a></li>
         <li><a href="#servicios">Terapias</a></li>
-        <li><a href="#reflexo">Reflexología</a></li>
+        <li><a href="#recursos">Recursos</a></li>
         <li><a href="#contacto" class="nav__cta">Reservar sesión</a></li>
       </ul>
       <button class="nav__toggle" aria-label="Abrir menú">☰</button>
@@ -340,20 +340,42 @@
     </div>
   </section>
 
-  <!-- ================= REFLEXOLOGÍA PODAL ================= -->
-  <section class="reflexo pad" id="reflexo">
+  <!-- ================= RECURSOS INTERACTIVOS ================= -->
+  <section class="recursos reflexo pad" id="recursos">
     <div class="container">
       <div class="head">
+        <span class="eyebrow">Recursos interactivos</span>
+        <h2 class="section-title">Explorá a tu ritmo</h2>
+        <p class="section-lede" style="margin:0 auto;">
+          Dos formas distintas de conectar con tu cuerpo: recorré el mapa que te resuene,
+          usando las flechas para pasar de uno a otro.
+        </p>
+      </div>
+
+      <div class="recursos-nav">
+        <button type="button" class="recursos-flecha recursos-flecha--prev" id="recursoPrev" aria-label="Recurso anterior">‹</button>
+        <div class="recursos-nav__info">
+          <span class="recursos-nav__contador" id="recursoContador">1 / 2</span>
+          <span class="recursos-nav__titulo" id="recursoTitulo">Mapa de reflexología podal</span>
+        </div>
+        <button type="button" class="recursos-flecha recursos-flecha--next" id="recursoNext" aria-label="Recurso siguiente">›</button>
+      </div>
+
+      <div class="recursos-track" id="recursosTrack">
+
+        <!-- RECURSO 1: MAPA DE REFLEXOLOGÍA PODAL -->
+        <article class="recurso-item activo" data-recurso="reflexo" data-titulo="Mapa de reflexología podal" aria-label="Mapa de reflexología podal">
+          <p class="recurso-item__subtitulo">Un recorrido por tus pies</p>
         <p class="reflexo-intro">
           Según la reflexología, cada zona de la planta del pie está conectada con un
           órgano o sistema del cuerpo. Recorré el mapa: pasá el cursor o tocá una zona
           para descubrir con qué se relaciona.
         </p>
-        <span class="eyebrow">Mapa de reflexología podal</span>
-        <h2 class="section-title">Un recorrido por tus pies</h2>
-      </div>
 
-      <div class="reflexo-chart" id="reflexoChart">
+      <div class="reflexo-chart-wrap" id="reflexoChartWrap">
+        <button type="button" class="reflexo-pie-flecha reflexo-pie-flecha--izq" id="reflexoPieAnterior" aria-label="Mostrar el otro pie">‹</button>
+
+        <div class="reflexo-chart" id="reflexoChart">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 670.95 321.09" class="reflexo-svg">
   <title>Mapa de reflexología podal</title>
   <g id="Feet">
@@ -667,6 +689,88 @@
   </g>
 </svg>
 
+        </div>
+
+        <button type="button" class="reflexo-pie-flecha reflexo-pie-flecha--der" id="reflexoPieSiguiente" aria-label="Mostrar el otro pie">›</button>
+
+        <span class="reflexo-pie-etiqueta" id="reflexoPieEtiqueta" aria-live="polite">Ambos pies</span>
+      </div>
+
+        </article>
+
+        <!-- RECURSO 2: ESCÁNER DE TENSIÓN SOMÁTICA -->
+        <article class="recurso-item" data-recurso="escaner" data-titulo="Escáner de tensión somática" aria-label="Escáner de tensión somática">
+          <p class="recurso-item__subtitulo">Tu cuerpo guarda mensajes</p>
+          <p class="section-lede" style="margin:0 auto 0.4rem;">Tocá un punto para descubrir qué suele guardarse ahí.</p>
+        <p class="escaner-intro">
+          Muchas veces la tensión física es la forma que encuentra lo emocional para hacerse
+          notar. Este mapa es una invitación a la escucha: un ejercicio breve de autoconocimiento
+          para identificar dónde se acumula esa carga en tu cuerpo, y empezar a entender qué
+          te quiere contar.
+        </p>
+
+      <div class="escaner-stage" id="escanerStage">
+        <div class="escaner-figura" id="escanerFigura">
+          <!-- Partículas de luz ambientales, puramente decorativas -->
+          <div class="escaner-particulas" aria-hidden="true">
+            <span class="escaner-particula" style="--px:6%;  --py:14%; --pd:0s;    --pc:#6fe3f0;"></span>
+            <span class="escaner-particula" style="--px:92%; --py:10%; --pd:0.9s;  --pc:#e879f9;"></span>
+            <span class="escaner-particula" style="--px:-4%; --py:38%; --pd:1.8s;  --pc:#60a5fa;"></span>
+            <span class="escaner-particula" style="--px:100%;--py:34%; --pd:2.6s;  --pc:#6fe3f0;"></span>
+            <span class="escaner-particula" style="--px:10%; --py:64%; --pd:3.3s;  --pc:#e879f9;"></span>
+            <span class="escaner-particula" style="--px:88%; --py:60%; --pd:1.3s;  --pc:#5eead4;"></span>
+            <span class="escaner-particula" style="--px:-2%; --py:82%; --pd:4.1s;  --pc:#60a5fa;"></span>
+            <span class="escaner-particula" style="--px:96%; --py:86%; --pd:2.1s;  --pc:#6fe3f0;"></span>
+            <span class="escaner-particula" style="--px:50%; --py:4%;  --pd:3.8s;  --pc:#e879f9;"></span>
+            <span class="escaner-particula" style="--px:46%; --py:96%; --pd:0.4s;  --pc:#5eead4;"></span>
+          </div>
+
+          <!-- Reemplazá el src por el nombre real de tu archivo una vez
+               que lo subas a assets/img/escaner/. Usá una foto de cuerpo
+               completo, de frente, con buen contraste — así los puntos
+               quedan bien ubicados en cualquier ancho de pantalla. -->
+          <img src="assets/img/escaner/cuerpo-frente.png" alt="Figura de cuerpo completo de frente" id="escanerImg">
+          <!-- Los puntos se generan solos desde DATA en el script de más abajo -->
+          <div id="escanerPuntos"></div>
+        </div>
+
+        <!-- Línea guía tipo "chart": conecta el punto tocado con la nota lateral.
+             Solo se dibuja en pantallas con espacio a los costados; en mobile
+             la nota se acomoda debajo y esta línea queda oculta. -->
+        <svg class="escaner-linea" id="escanerLinea" aria-hidden="true">
+          <line id="escanerLineaTrazo" x1="0" y1="0" x2="0" y2="0" />
+          <circle id="escanerLineaPunto" r="3" cx="0" cy="0" />
+        </svg>
+
+        <!-- Nota: aparece como una anotación al costado de la figura (o
+             debajo, en mobile), sin ventana de diálogo ni recuadro clínico. -->
+        <div class="escaner-resultado" id="escanerResultado">
+          <div class="escaner-resultado__inner">
+            <button class="escaner-resultado__cerrar" id="escanerCerrar" aria-label="Cerrar">✕</button>
+
+            <div class="escaner-scan" id="escanerScan">
+              <p class="escaner-scan__label" id="escanerScanLabel">Percibiendo…</p>
+              <div class="escaner-scan__barra"><span id="escanerScanBarra"></span></div>
+            </div>
+
+            <div class="escaner-body" id="escanerBody" aria-live="polite">
+              <span class="escaner-body__marca" aria-hidden="true"></span>
+              <span class="eyebrow" id="escanerEyebrow">Zona</span>
+              <h3 id="escanerPanelTitulo"></h3>
+              <p class="kicker" id="escanerKicker"></p>
+              <hr>
+              <p class="texto" id="escanerTexto"></p>
+              <hr>
+              <p class="pregunta" id="escanerPregunta"></p>
+              <p class="escaner-cta-puente">Si esta zona te resuena, podemos trabajarla juntas en una sesión pensada para vos.</p>
+              <a href="#contacto" class="btn-primario" id="escanerCta">Reservar sesión</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        </article>
+
       </div>
     </div>
 
@@ -679,6 +783,7 @@
       <p class="texto" id="reflexoTexto"></p>
       <button type="button" class="btn-primario" id="reflexoCta">Ver reflexología podal</button>
     </div>
+
   </section>
 
   <!-- ================= CONTACTO ================= -->
@@ -962,6 +1067,432 @@
         });
         path.addEventListener('click', () => abrirZonaReflexo(cls, path));
       });
+
+      // ---------------------------------------------------------
+      // VISTA DE UN SOLO PIE (móvil)
+      // ---------------------------------------------------------
+      // El chart original dibuja ambos pies en un mismo viewBox
+      // (670.95 x 321.09), simétrico respecto al centro (x=335.475).
+      // En pantallas angostas conviene mostrar un pie a la vez, bien
+      // grande, en vez de los dos achicados. Los rangos de abajo se
+      // calcularon a partir de las coordenadas reales del SVG (con
+      // margen de sobra para no cortar ninguna zona ni etiqueta):
+      //   - zonas del pie "de la imagen izquierda" (pie derecho,
+      //     según reflexología): x entre 127 y 260
+      //   - zonas del pie "de la imagen derecha" (pie izquierdo):
+      //     x entre 412 y 544
+      //   - etiquetas compartidas (ej. "Hipófisis"), a mitad de
+      //     camino: x entre 291 y 320
+      // Por eso ambas vistas se superponen un poco en el centro:
+      // así ninguna etiqueta central queda huérfana en ningún lado.
+      const vistaAmbos     = '0 0 670.95 321.09';
+      const vistaPieDer    = '0 0 390 321.09';
+      const vistaPieIzq    = '280.95 0 390 321.09';
+
+      const flechaAnt = document.getElementById('reflexoPieAnterior');
+      const flechaSig = document.getElementById('reflexoPieSiguiente');
+      const etiquetaPie = document.getElementById('reflexoPieEtiqueta');
+
+      let pieMovilActual = 'der'; // 'der' | 'izq' — solo se usa en modoUnPie
+
+      function modoUnPie() {
+        return esMovil();
+      }
+
+      function aplicarVistaPies() {
+        if (!modoUnPie()) {
+          svgEl.setAttribute('viewBox', vistaAmbos);
+          etiquetaPie.textContent = 'Ambos pies';
+          return;
+        }
+        if (pieMovilActual === 'der') {
+          svgEl.setAttribute('viewBox', vistaPieDer);
+          etiquetaPie.textContent = 'Pie derecho · tocá las flechas para ver el otro';
+        } else {
+          svgEl.setAttribute('viewBox', vistaPieIzq);
+          etiquetaPie.textContent = 'Pie izquierdo · tocá las flechas para ver el otro';
+        }
+      }
+
+      function cambiarPie() {
+        pieMovilActual = pieMovilActual === 'der' ? 'izq' : 'der';
+        aplicarVistaPies();
+      }
+
+      flechaAnt.addEventListener('click', cambiarPie);
+      flechaSig.addEventListener('click', cambiarPie);
+
+      aplicarVistaPies();
+
+      let resizePiesT;
+      let eraMovilPies = modoUnPie();
+      window.addEventListener('resize', () => {
+        clearTimeout(resizePiesT);
+        resizePiesT = setTimeout(() => {
+          const ahoraEsMovil = modoUnPie();
+          if (ahoraEsMovil !== eraMovilPies) {
+            eraMovilPies = ahoraEsMovil;
+            aplicarVistaPies();
+          }
+        }, 150);
+      });
+    })();
+
+    // ---------------------------------------------------------
+    // ESCÁNER DE TENSIÓN SOMÁTICA
+    // ---------------------------------------------------------
+   const escanerData = [
+  {
+    id: "cabeza",
+    x: 50.0,
+    y: 22.2,
+    label: "Cabeza",
+    kicker: "Mente y control",
+    texto: "La cabeza suele concentrar el exceso de pensamiento: planificar, anticipar, resolver. Es la zona de quienes viven un paso adelante de sí mismos.",
+    pregunta: "¿Qué pensamiento repetís sin darte cuenta?"
+  },
+  {
+    id: "cuello",
+    x: 50.0,
+    y: 28.8,
+    label: "Cuello",
+    kicker: "Flexibilidad y voz",
+    texto: "El cuello conecta lo que pensás con lo que decís. Cuando se tensa, muchas veces hay palabras que se están conteniendo.",
+    pregunta: "¿Qué te gustaría decir y todavía no dijiste?"
+  },
+  {
+    id: "hombro-izq",
+    x: 39.1,
+    y: 32.3,
+    label: "Hombro izquierdo",
+    kicker: "Carga afectiva",
+    texto: "El lado izquierdo suele asociarse a los vínculos: lo que sostenemos por otros, muchas veces en silencio.",
+    pregunta: "¿A quién estás sosteniendo sin pedir nada a cambio?"
+  },
+  {
+    id: "hombro-der",
+    x: 61.6,
+    y: 32.3,
+    label: "Hombro derecho",
+    kicker: "Carga de responsabilidad",
+    texto: "El lado derecho suele relacionarse con la acción y el deber: lo que hay que hacer, resolver, cumplir. Ahí se acumula la autoexigencia.",
+    pregunta: "¿Qué peso ya no necesitás seguir sosteniendo?"
+  },
+  {
+    id: "pecho",
+    x: 50.0,
+    y: 33.0,
+    label: "Pecho",
+    kicker: "Apertura y afecto",
+    texto: "El pecho guarda la relación con el afecto: lo que se da, lo que se recibe, lo que cuesta dejar entrar.",
+    pregunta: "¿Qué es lo último que te costó dejar entrar?"
+  },
+  {
+    id: "plexo",
+    x: 50.0,
+    y: 37.0,
+    label: "Plexo solar",
+    kicker: "Autoestima y poder personal",
+    texto: "El plexo se tensa cuando la identidad está en juego: decisiones, juicios propios o ajenos, la sensación de tener que demostrar algo.",
+    pregunta: "¿Ante quién sentís que tenés que demostrar algo?"
+  },
+  {
+    id: "abdomen",
+    x: 50.0,
+    y: 44.1,
+    label: "Abdomen",
+    kicker: "Digestión emocional",
+    texto: "El abdomen procesa tanto la comida como las emociones. Lo que no se termina de digerir, a veces literalmente se siente ahí.",
+    pregunta: "¿Hay algo que todavía no terminaste de procesar?"
+  },
+  {
+    id: "pelvis",
+    x: 50.0,
+    y: 50.8,
+    label: "Pelvis",
+    kicker: "Cimientos y seguridad",
+    texto: "La pelvis es la base de sostén del cuerpo. Suele relacionarse con la sensación de estabilidad, o su ausencia, en la vida cotidiana.",
+    pregunta: "¿Qué tan firme sentís tu propia base hoy?"
+  },
+  {
+    id: "mano-izq",
+    x: 36.6,
+    y: 52.8,
+    label: "Mano izquierda",
+    kicker: "Recibir",
+    texto: "Las manos son la zona de dar y recibir. La izquierda suele vincularse con lo que dejamos entrar: ayuda, afecto, descanso.",
+    pregunta: "¿Qué te cuesta más: pedir ayuda o aceptarla?"
+  },
+  {
+    id: "mano-der",
+    x: 62.8,
+    y: 52.8,
+    label: "Mano derecha",
+    kicker: "Dar y hacer",
+    texto: "La mano derecha suele asociarse con la acción hacia afuera: lo que producís, lo que entregás, lo que construís con tus propias manos.",
+    pregunta: "¿Cuánto de lo que das, te devuelve algo a vos también?"
+  },
+  {
+    id: "rodilla-izq",
+    x: 44.1,
+    y: 64.5,
+    label: "Rodilla izquierda",
+    kicker: "Flexibilidad ante lo afectivo",
+    texto: "Las rodillas permiten avanzar y también ceder. Cuando se rigidizan, suele haber resistencia a soltar el control en lo emocional.",
+    pregunta: "¿Dónde te estás resistiendo a ceder?"
+  },
+  {
+    id: "rodilla-der",
+    x: 53.4,
+    y: 64.5,
+    label: "Rodilla derecha",
+    kicker: "Flexibilidad ante lo práctico",
+    texto: "El lado derecho de las rodillas suele vincularse con avanzar en lo concreto: proyectos, decisiones, pasos que cuesta dar.",
+    pregunta: "¿Qué paso concreto estás postergando?"
+  },
+  {
+    id: "pie-izq",
+    x: 45.9,
+    y: 77.7,
+    label: "Pie izquierdo",
+    kicker: "Dirección afectiva",
+    texto: "Los pies sostienen y orientan. El izquierdo suele reflejar hacia dónde te llevan los vínculos que elegís sostener.",
+    pregunta: "¿Hacia dónde te están llevando tus vínculos hoy?"
+  },
+  {
+    id: "pie-der",
+    x: 53.1,
+    y: 78.0,
+    label: "Pie derecho",
+    kicker: "Dirección de vida",
+    texto: "El pie derecho suele asociarse al rumbo que elegís de forma consciente: hacia dónde caminás cuando decidís vos.",
+    pregunta: "Si nadie más opinara, ¿hacia dónde caminarías?"
+  }
+];
+
+    (function () {
+      const stage = document.getElementById('escanerStage');
+      const figura = document.getElementById('escanerFigura');
+      const puntosWrap = document.getElementById('escanerPuntos');
+      const resultado = document.getElementById('escanerResultado');
+      const scanE = document.getElementById('escanerScan');
+      const bodyE = document.getElementById('escanerBody');
+      const barraE = document.getElementById('escanerScanBarra');
+      const scanLabelE = document.getElementById('escanerScanLabel');
+      const svgLinea = document.getElementById('escanerLinea');
+      const trazo = document.getElementById('escanerLineaTrazo');
+      const puntoLinea = document.getElementById('escanerLineaPunto');
+
+      if (!figura) return; // la sección no está en esta página
+
+      let activo = null;
+      let zonaActiva = null;
+      let te1, te2, te3;
+
+      // Por encima de este ancho hay lugar para la "nota al costado" con
+      // línea guía; por debajo, la nota se acomoda debajo de la figura
+      // (más simple y liviano para mobile, sin líneas que calcular).
+      // Debe coincidir con el media query "min-width: 1100px" del CSS.
+      const modoChart = () => window.innerWidth >= 1100;
+
+      escanerData.forEach(zona => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'escaner-punto';
+        btn.style.left = zona.x + '%';
+        btn.style.top = zona.y + '%';
+        btn.setAttribute('aria-label', zona.label);
+
+        const label = document.createElement('span');
+        label.className = 'escaner-etiqueta';
+        label.style.left = (zona.x + (zona.x > 50 ? 2 : -2)) + '%';
+        label.style.transform = zona.x > 50 ? 'translateY(-50%)' : 'translate(-100%, -50%)';
+        label.textContent = zona.label;
+        label.style.top = zona.y + '%';
+        label.style.position = 'absolute';
+
+        puntosWrap.appendChild(btn);
+        puntosWrap.appendChild(label);
+
+        btn.addEventListener('click', () => abrirZonaEscaner(zona, btn));
+      });
+
+      // Ubica la nota a la altura aproximada del punto tocado, pero
+      // acotada con medidas reales para que nunca quede por encima del
+      // techo ni por debajo del piso de la figura — así no se superpone
+      // con la sección siguiente ni queda con la punta cortada arriba.
+      function posicionarResultado(zona) {
+        if (!modoChart()) { resultado.style.top = ''; return; }
+
+        const figuraRect = figura.getBoundingClientRect();
+        const stageRect = stage.getBoundingClientRect();
+        const alturaNota = resultado.offsetHeight || 280;
+
+        let top = (zona.y / 100) * figuraRect.height - 50; // ~altura del punto, con un poco de aire arriba
+        top = Math.max(0, Math.min(top, figuraRect.height - alturaNota));
+        top += figuraRect.top - stageRect.top;
+
+        resultado.style.top = Math.round(top) + 'px';
+      }
+
+      function abrirZonaEscaner(zona, btn) {
+        if (activo) activo.classList.remove('activo');
+        activo = btn;
+        zonaActiva = zona;
+        btn.classList.add('activo');
+
+        const yaEstabaAbierto = resultado.classList.contains('visible');
+
+        // Lado de la nota: los puntos del lado izquierdo del cuerpo abren
+        // su nota hacia la izquierda, y viceversa — así la línea nunca
+        // tiene que cruzar por encima de la figura.
+        resultado.classList.remove('lado-izq', 'lado-der');
+        resultado.classList.add(zona.x <= 50 ? 'lado-izq' : 'lado-der');
+
+        resultado.classList.add('visible');
+        posicionarResultado(zona);
+
+        clearTimeout(te1); clearTimeout(te2); clearTimeout(te3);
+        bodyE.classList.remove('activo');
+        scanE.classList.add('activo');
+        barraE.style.width = '0%';
+        scanLabelE.textContent = 'Percibiendo ' + zona.label.toLowerCase() + '…';
+
+        te1 = setTimeout(() => { barraE.style.width = '100%'; }, 60);
+        te2 = setTimeout(() => {
+          document.getElementById('escanerEyebrow').textContent = 'Zona · ' + zona.label;
+          document.getElementById('escanerPanelTitulo').textContent = zona.label;
+          document.getElementById('escanerKicker').textContent = zona.kicker;
+          document.getElementById('escanerTexto').textContent = zona.texto;
+          document.getElementById('escanerPregunta').textContent = zona.pregunta;
+        }, 900);
+        te3 = setTimeout(() => {
+          scanE.classList.remove('activo');
+          bodyE.classList.add('activo');
+          // el contenido recién ahora tiene su alto final, así que se
+          // vuelve a acotar la posición y a redibujar la línea con
+          // las medidas reales (evita que la nota quede pisando
+          // la sección de abajo si el texto es más largo de lo estimado).
+          posicionarResultado(zona);
+          dibujarLinea();
+        }, 1150);
+
+        // La primera vez que se abre, lleva el resultado a la vista
+        // (útil sobre todo en móvil, donde puede quedar más abajo).
+        if (!yaEstabaAbierto) {
+          setTimeout(() => {
+            resultado.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 80);
+        }
+
+        requestAnimationFrame(dibujarLinea);
+      }
+
+      // Dibuja la línea guía tipo "chart" entre el punto tocado y el
+      // borde de la nota. Solo corre en modoChart (desktop/tablet ancho);
+      // en mobile la línea queda oculta por CSS y esto no hace nada visible.
+      function dibujarLinea() {
+        if (!activo || !zonaActiva || !modoChart() || !resultado.classList.contains('visible')) {
+          trazo.setAttribute('x1', 0); trazo.setAttribute('x2', 0);
+          trazo.setAttribute('y1', 0); trazo.setAttribute('y2', 0);
+          puntoLinea.setAttribute('cx', -10); puntoLinea.setAttribute('cy', -10);
+          return;
+        }
+
+        const stageRect = stage.getBoundingClientRect();
+        const pRect = activo.getBoundingClientRect();
+        const rRect = resultado.querySelector('.escaner-resultado__inner').getBoundingClientRect();
+
+        const x1 = pRect.left + pRect.width / 2 - stageRect.left;
+        const y1 = pRect.top + pRect.height / 2 - stageRect.top;
+
+        const haciaIzquierda = zonaActiva.x <= 50;
+        const x2 = (haciaIzquierda ? rRect.right : rRect.left) - stageRect.left;
+        const y2 = rRect.top + Math.min(46, rRect.height / 2) - stageRect.top;
+
+        trazo.setAttribute('x1', x1); trazo.setAttribute('y1', y1);
+        trazo.setAttribute('x2', x2); trazo.setAttribute('y2', y2);
+        puntoLinea.setAttribute('cx', x1); puntoLinea.setAttribute('cy', y1);
+
+        const largo = Math.hypot(x2 - x1, y2 - y1);
+        trazo.style.strokeDasharray = largo;
+        trazo.style.strokeDashoffset = largo;
+        // fuerza reflow para que la transición de dashoffset se dispare
+        trazo.getBoundingClientRect();
+        trazo.style.strokeDashoffset = 0;
+      }
+
+      function cerrarEscaner() {
+        resultado.classList.remove('visible');
+        if (activo) activo.classList.remove('activo');
+        activo = null;
+        zonaActiva = null;
+        dibujarLinea();
+      }
+
+      document.getElementById('escanerCerrar').addEventListener('click', cerrarEscaner);
+
+      let resizeT;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeT);
+        resizeT = setTimeout(() => {
+          if (zonaActiva) posicionarResultado(zonaActiva);
+          dibujarLinea();
+        }, 120);
+      });
+
+      // -----------------------------------------------------
+      // MODO CALIBRACIÓN: agregá ?calibrar=1 a la URL, clickeá
+      // sobre la foto y el x/y (en %) queda en la consola,
+      // listo para copiar dentro de escanerData de arriba.
+      // -----------------------------------------------------
+      if (new URLSearchParams(window.location.search).get('calibrar') === '1') {
+        const img = document.getElementById('escanerImg');
+        img.style.cursor = 'crosshair';
+        img.addEventListener('click', (e) => {
+          const r = img.getBoundingClientRect();
+          const x = (((e.clientX - r.left) / r.width) * 100).toFixed(1);
+          const y = (((e.clientY - r.top) / r.height) * 100).toFixed(1);
+          console.log(`x: ${x}, y: ${y}`);
+        });
+        console.log('Modo calibración activo: clickeá sobre la foto para obtener x/y en %.');
+      }
+    })();
+
+    // ---------------------------------------------------------
+    // NAVEGACIÓN ENTRE RECURSOS (flechas dentro de la sección)
+    // ---------------------------------------------------------
+    (function () {
+      const items = Array.from(document.querySelectorAll('#recursosTrack .recurso-item'));
+      if (!items.length) return;
+
+      const btnPrev = document.getElementById('recursoPrev');
+      const btnNext = document.getElementById('recursoNext');
+      const contador = document.getElementById('recursoContador');
+      const tituloEl = document.getElementById('recursoTitulo');
+
+      let indice = items.findIndex(el => el.classList.contains('activo'));
+      if (indice < 0) indice = 0;
+
+      function mostrarRecurso(nuevoIndice, { desplazar = false } = {}) {
+        indice = (nuevoIndice + items.length) % items.length;
+
+        items.forEach((item, i) => item.classList.toggle('activo', i === indice));
+
+        const actual = items[indice];
+        tituloEl.textContent = actual.dataset.titulo || '';
+        contador.textContent = (indice + 1) + ' / ' + items.length;
+
+        if (desplazar) {
+          actual.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      btnPrev.addEventListener('click', () => mostrarRecurso(indice - 1, { desplazar: true }));
+      btnNext.addEventListener('click', () => mostrarRecurso(indice + 1, { desplazar: true }));
+
+      // Sincroniza texto/contador con el estado inicial, sin desplazar la página.
+      mostrarRecurso(indice);
     })();
 
     menuRadial.querySelectorAll('.menu-radial__link').forEach(boton => {
