@@ -284,6 +284,7 @@ body.cargando {
   background-image: var(--stripes), var(--rainbow);
   background-size: 200%, 100%;
   animation: smoothBg 60s linear infinite;
+  background-attachment: fixed;
   mix-blend-mode: difference;
 }
 
@@ -1273,4 +1274,612 @@ footer a {
   .services-bg__layer {
     background-position: center top;
   }
+}
+/* =========================================================
+   ESCÁNER DE TENSIÓN SOMÁTICA
+   Sección interactiva: foto de cuerpo + puntos posicionados en %
+   (para que funcionen igual en cualquier tamaño de imagen/pantalla).
+   Reutiliza las variables globales (--navy, --halo-cyan, --paper, etc.)
+   ========================================================= */
+/* =========================================================
+   ESCÁNER DE TENSIÓN SOMÁTICA — Ajuste Estado Inicial + Panel
+   ========================================================= */
+
+/* 1. La figura siempre centrada; el resultado va debajo, en flujo normal */
+/* ---------- Escáner de tensión somática ---------- */
+.escaner {
+  background: var(--paper-soft);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.escaner-intro {
+  max-width: 56ch;
+  margin: 1.1rem auto 0;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #56607a;
+}
+
+.escaner-stage {
+  position: relative;
+  max-width: 1040px;
+  margin: 2rem auto 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* ---- foto + puntos ---- */
+.escaner-figura {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ---- partículas de luz ambientales, decorativas ----
+   Se ubican por porcentaje alrededor de la figura (algunas
+   incluso por fuera del borde, gracias al inset negativo del
+   contenedor) y flotan despacio con opacidad + transform,
+   que es barato de animar y no castiga el rendimiento en
+   celulares. Van DETRÁS de la foto en el orden del DOM. */
+.escaner-particulas {
+  position: absolute;
+  inset: -6%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.escaner-particula {
+  position: absolute;
+  top: var(--py);
+  left: var(--px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 6px 1.5px rgba(255,255,255,0.9),
+    0 0 16px 3px var(--pc, var(--halo-cyan));
+  opacity: 0;
+  animation: escanerFlotar 7s ease-in-out infinite;
+  animation-delay: var(--pd, 0s);
+}
+
+@keyframes escanerFlotar {
+  0%   { opacity: 0;    transform: translateY(0) scale(0.6); }
+  15%  { opacity: 0.9; }
+  50%  { opacity: 1;    transform: translateY(-22px) scale(1); }
+  85%  { opacity: 0.45; }
+  100% { opacity: 0;    transform: translateY(-46px) scale(0.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escaner-particula { animation: none; opacity: 0.5; }
+}
+
+.escaner-figura img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.escaner-punto {
+  position: absolute;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.escaner-punto::before,
+.escaner-punto::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* punto sólido */
+.escaner-punto::before {
+  width: 9px;
+  height: 9px;
+  background: var(--navy);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.65);
+  transition: background 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+/* halo animado (mismo espíritu que --halo-cyan del resto del sitio) */
+.escaner-punto::after {
+  width: 9px;
+  height: 9px;
+  border: 1.4px solid var(--halo-cyan);
+  opacity: 0;
+}
+
+.escaner-punto:hover::before,
+.escaner-punto.activo::before {
+  background: var(--navy-soft);
+  width: 12px;
+  height: 12px;
+}
+
+.escaner-punto:hover::after,
+.escaner-punto.activo::after,
+.escaner-punto:focus-visible::after {
+  animation: escaner-pulso 1.8s ease-in-out infinite;
+}
+
+@keyframes escaner-pulso {
+  0%   { transform: translate(-50%, -50%) scale(0.8); opacity: 0.35; }
+  50%  { transform: translate(-50%, -50%) scale(2.4); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.35; }
+}
+
+.escaner-punto:focus-visible { outline: none; }
+.escaner-punto:focus-visible::before { background: var(--navy-soft); }
+
+.escaner-etiqueta {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--ink);
+  background: rgba(255,255,255,0.9);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.escaner-punto:hover + .escaner-etiqueta { opacity: 1; }
+
+/* ---- línea guía tipo "chart": conecta el punto con la nota ----
+   Solo se activa en pantallas grandes (ver media query más abajo
+   y el chequeo modoChart() en JS); en mobile queda oculta. */
+.escaner-linea {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.escaner-linea line {
+  stroke: var(--halo-cyan);
+  stroke-width: 1.4;
+  opacity: 0.8;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.escaner-linea circle {
+  fill: var(--halo-cyan);
+  opacity: 0.9;
+}
+
+/* ---- resultado: nota al costado de la figura (o debajo, en mobile) ----
+   Por defecto (mobile / pantallas angostas) es un bloque en el flujo
+   normal, debajo de la figura — igual que antes. En pantallas anchas
+   (ver media query más abajo) pasa a ser una "nota" flotante al costado,
+   conectada con una línea guía tipo chart. */
+.escaner-resultado {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.45s ease,
+              margin-top 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.escaner-resultado.visible {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 2.4rem;
+}
+
+.escaner-resultado__inner {
+  overflow: hidden;
+  min-height: 0;
+  position: relative;
+  background: linear-gradient(165deg, #ffffff 0%, var(--paper-soft) 100%);
+  color: var(--ink);
+  border: 1px solid rgba(111, 227, 240, 0.4);
+  border-radius: 18px;
+  padding: 2.4rem 2.1rem;
+  text-align: center;
+  box-shadow: 0 24px 60px -34px rgba(11, 60, 110, 0.35);
+}
+
+/* resplandor suave (aurora) detrás de la nota, una sola vez al aparecer */
+.escaner-resultado__inner::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(96,165,250,0.22) 0%, transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(232,121,249,0.18) 0%, transparent 55%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: escanerResultadoGlow 1.4s ease-out;
+}
+
+@keyframes escanerResultadoGlow {
+  0%   { opacity: 0; }
+  35%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* pequeña marca ornamental arriba del contenido, en vez de un ícono clínico */
+.escaner-body__marca {
+  display: block;
+  width: 30px;
+  height: 1px;
+  margin: 0 auto 1.1rem;
+  background: linear-gradient(to right, transparent, var(--halo-cyan), transparent);
+}
+
+.escaner-resultado__cerrar {
+  position: absolute;
+  z-index: 2;
+  top: 1.1rem;
+  right: 1.2rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  opacity: 0.6;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+.escaner-resultado__cerrar:hover { background: rgba(11,60,110,0.06); opacity: 1; }
+.escaner-resultado__cerrar:focus-visible { outline: 2px solid var(--halo-cyan); outline-offset: 2px; }
+
+.escaner-scan { position: relative; z-index: 1; display: none; }
+.escaner-scan.activo { display: block; }
+.escaner-scan__label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--navy);
+  margin-bottom: 1rem;
+}
+.escaner-scan__barra {
+  width: 60%;
+  height: 2px;
+  margin: 0 auto;
+  background: rgba(111, 227, 240, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.escaner-scan__barra span {
+  display: block; height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--halo-cyan), #e879f9);
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+
+.escaner-body { position: relative; z-index: 1; display: none; opacity: 0; transition: opacity 0.4s ease; }
+.escaner-body.activo { display: block; opacity: 1; }
+
+.escaner-body hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.3rem 0;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.escaner-body .eyebrow { color: var(--navy); opacity: 0.7; }
+.escaner-body h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 0.3rem;
+}
+.escaner-body .kicker {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: #6b7690;
+  margin: 0;
+}
+.escaner-body p.texto {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: #384357;
+  margin: 0;
+}
+.escaner-body p.pregunta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--navy);
+  margin: 0;
+}
+
+.escaner-cta-puente {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #6b7690;
+  margin: 1.5rem 0 0;
+}
+
+.escaner-body .btn-primario {
+  margin-top: 1rem;
+  background: transparent;
+  color: var(--navy);
+  border: 1px solid var(--navy);
+  box-shadow: none;
+}
+.escaner-body .btn-primario:hover {
+  background: var(--navy);
+  color: #fff;
+}
+
+@media (max-width: 780px) {
+  .escaner-figura {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* Ajustamos el tamaño táctil de los puntos para facilitar la interacción en móviles */
+  .escaner-punto {
+    width: 30px;
+    height: 30px;
+  }
+
+  .escaner-resultado__inner {
+    padding: 2.2rem 1.5rem;
+  }
+
+  .escaner-etiqueta {
+    display: none; /* En móviles el resultado se abre directo al tocar */
+  }
+}
+
+/* ---- Modo "chart": pantallas con espacio a los costados ----
+   La nota deja de estar debajo y pasa a flotar al lado de la figura,
+   conectada con la línea guía dibujada por JS (ver modoChart() en el
+   script). El umbral coincide con el de JS (1100px). */
+@media (min-width: 1100px) {
+  .escaner-linea { display: block; }
+
+  .escaner-resultado {
+    display: block;
+    position: absolute;
+    width: 270px;
+    max-width: none;
+    top: 10%;
+    grid-template-rows: unset;
+    opacity: 0;
+    margin: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .escaner-resultado.lado-der { right: 0; transform: translateX(18px); }
+  .escaner-resultado.lado-izq { left: 0; transform: translateX(-18px); }
+
+  .escaner-resultado.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    margin: 0;
+  }
+
+  .escaner-resultado__inner { text-align: left; padding: 2rem 1.8rem; }
+  .escaner-body__marca { margin: 0 0 1.1rem; }
+  .escaner-body hr { margin-left: 0; }
+  .escaner-scan__barra { margin: 0; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escaner-punto:hover::after,
+  .escaner-punto.activo::after,
+  .escaner-punto:focus-visible::after { animation: none; opacity: 0.6; }
+  .escaner-resultado, .escaner-resultado__inner, .escaner-scan__barra span, .escaner-linea line { transition: none; }
+  .escaner-resultado__inner::before { animation: none; }
+}
+
+/* =========================================================
+   RECURSOS INTERACTIVOS
+   Contenedor que agrupa varios recursos (mapa de reflexología,
+   escáner de tensión somática, futuros recursos) navegables
+   con flechas dentro de la misma sección.
+   ========================================================= */
+.recurso-item__subtitulo {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 400;
+  text-align: center;
+  color: var(--navy);
+  margin: 0 0 0.4rem;
+}
+
+.recursos-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  margin: 0 auto 2.2rem;
+  max-width: 420px;
+}
+
+.recursos-flecha {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--navy);
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.recursos-flecha:hover {
+  background: var(--paper-soft);
+  border-color: var(--halo-cyan);
+  transform: translateY(-1px);
+}
+
+.recursos-flecha:focus-visible {
+  outline: 2px solid var(--halo-cyan);
+  outline-offset: 2px;
+}
+
+.recursos-nav__info {
+  min-width: 200px;
+  text-align: center;
+}
+
+.recursos-nav__contador {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a93a8;
+  margin-bottom: 0.15rem;
+}
+
+.recursos-nav__titulo {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--navy);
+}
+
+.recursos-track {
+  position: relative;
+}
+
+.recurso-item {
+  display: none;
+}
+
+.recurso-item.activo {
+  display: block;
+  animation: recursoAparece 0.4s ease;
+}
+
+@keyframes recursoAparece {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recurso-item.activo { animation: none; }
+}
+
+@media (max-width: 640px) {
+  .recursos-nav { gap: 0.6rem; }
+  .recursos-nav__info { min-width: 150px; }
+  .recursos-nav__titulo { font-size: 0.92rem; }
+}
+
+/* =========================================================
+   REFLEXOLOGÍA — vista de un solo pie en móvil
+   Por defecto se ve el chart completo (ambos pies). Debajo de
+   700px, las flechas laterales permiten alternar entre pie
+   derecho / pie izquierdo, cada uno ocupando más espacio en
+   pantalla. En desktop las flechas quedan ocultas.
+   ========================================================= */
+.reflexo-chart-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.reflexo-chart-wrap .reflexo-chart {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.reflexo-pie-flecha {
+  display: none; /* solo se muestran en móvil */
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--navy);
+  font-size: 1.35rem;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.reflexo-pie-flecha:hover {
+  background: var(--paper-soft);
+  border-color: var(--halo-cyan);
+  transform: translateY(-1px);
+}
+
+.reflexo-pie-flecha:focus-visible {
+  outline: 2px solid var(--halo-cyan);
+  outline-offset: 2px;
+}
+
+.reflexo-pie-etiqueta {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: -1.6rem;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: #6b7690;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .reflexo-chart-wrap {
+    margin-bottom: 1.8rem;
+  }
+  .reflexo-pie-flecha,
+  .reflexo-pie-etiqueta {
+    display: flex;
+  }
+  .reflexo-pie-etiqueta { display: block; text-align: center; }
 }
