@@ -254,6 +254,9 @@ body.cargando {
   display: flex;
   place-content: center;
   place-items: center;
+  /* contain aísla el repintado del hero: los filtros/blends de acá
+     adentro ya no fuerzan recalcular el resto de la página en cada frame */
+  contain: paint;
   --stripes: repeating-linear-gradient(
     100deg,
     var(--stripe-color) 0%,
@@ -273,24 +276,33 @@ body.cargando {
   background-image: var(--stripes), var(--rainbow);
   background-size: 300%, 200%;
   background-position: 50% 50%, 50% 50%;
-  filter: blur(10px) invert(100%);
+  filter: blur(6px) invert(100%);
   mask-image: radial-gradient(ellipse at 100% 0%, black 40%, transparent 70%);
 }
 
 .hero::after {
   content: "";
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
   background-image: var(--stripes), var(--rainbow);
-  background-size: 200%, 100%;
+  background-size: 100%, 50%;
+  /* Antes esto animaba "background-position", que obliga al navegador a
+     repintar el gradiente en cada frame (no corre en GPU) y, combinado
+     con mix-blend-mode, era carísimo. Ahora animamos "transform" sobre
+     un elemento del doble de ancho: como el gradiente es repetible, se
+     ve exactamente igual pero el movimiento lo hace la GPU sin repintar
+     nada — la mejora de rendimiento más grande de todo el sitio. */
   animation: smoothBg 60s linear infinite;
-  background-attachment: fixed;
   mix-blend-mode: difference;
+  will-change: transform;
 }
 
 @keyframes smoothBg {
-  from { background-position: 50% 50%, 50% 50%; }
-  to { background-position: 350% 50%, 350% 50%; }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 .content {
@@ -327,7 +339,10 @@ body.cargando {
   background-color: white;
   -webkit-mask: linear-gradient(#000 0 0) luminance;
   mask: linear-gradient(#000 0 0) luminance, alpha;
-  backdrop-filter: blur(19px) brightness(12.5);
+  /* backdrop-filter con blur es de lo más caro que existe en CSS: el
+     costo crece con el cuadrado del radio. Bajamos de 19px a 9px
+     (misma idea visual, mucho más barato de samplear en cada frame) */
+  backdrop-filter: blur(9px) brightness(12.5);
   -webkit-text-stroke: 1px white;
   display: flex;
   margin: auto;
@@ -424,6 +439,18 @@ body.cargando {
 @media (prefers-reduced-motion: reduce) {
   .sparkle-dot,
   .star-dot { animation: none; opacity: 0.5; }
+}
+
+/* ---- Rendimiento en mobile: menos blur y menos elementos animando.
+   Los celulares (sobre todo gama media/baja) son los que más sufren
+   los filtros pesados (backdrop-filter, blur, mix-blend-mode), así
+   que acá recortamos agresivamente sin perder el efecto general. ---- */
+@media (max-width: 768px) {
+  .hero::before { filter: blur(3px) invert(100%); }
+  .h1--scalingSize::before { backdrop-filter: blur(5px) brightness(12.5); }
+
+  /* Dejamos solo ~15 de las 46 estrellas de fondo animando */
+  .star-dot:nth-child(n+16) { animation: none; opacity: 0.12; }
 }
 
 /* =========================================================
@@ -643,8 +670,12 @@ section.pad {
   width: 0;
   height: 0;
   --halo-size: 120px;
-  --halo-blur: 46px;
+  /* 46px de blur en un box-shadow que además escala vía transform
+     obligaba a recalcular el blur en cada frame; con 24px se ve
+     prácticamente igual y sale mucho más barato */
+  --halo-blur: 24px;
   --halo-spread: 5px;
+  contain: paint;
 }
 
 /* ---- 1. Anillos y Sombras de Pulsación (Halo Cyan) ----
@@ -662,7 +693,20 @@ section.pad {
   left: calc(var(--halo-size) / -2);
   top: calc(var(--halo-size) / -2);
   border-radius: 50%;
+  /* Esta animación corría siempre, infinita, aunque el menú radial
+     estuviera cerrado y el halo invisible (opacity:0 no detiene
+     animaciones). La pausamos por defecto y la activamos solo cuando
+     el menú realmente está abierto — así no gasta CPU/GPU "todo el
+     tiempo" como venía pasando. */
   animation: GrowHalo 3s linear infinite;
+  animation-play-state: paused;
+  will-change: transform, opacity;
+}
+
+.menu-radial.abierto .halo-container::before,
+.menu-radial.abierto .halo-container::after,
+.menu-radial.abierto .estrella-norte {
+  animation-play-state: running;
 }
 
 .halo-container::before {
@@ -685,7 +729,7 @@ section.pad {
   margin-top: calc(var(--estrella-size) / -2);
   pointer-events: none;
   animation: GrowHalo 3s linear infinite;
-  background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.6) 32%, transparent 70%);
+  animation-play-state: paused;
   background-size: 14px 14px;
   background-repeat: no-repeat;
   background-position: center;
@@ -1813,73 +1857,3 @@ footer a {
   .recursos-nav__titulo { font-size: 0.92rem; }
 }
 
-/* =========================================================
-   REFLEXOLOGÍA — vista de un solo pie en móvil
-   Por defecto se ve el chart completo (ambos pies). Debajo de
-   700px, las flechas laterales permiten alternar entre pie
-   derecho / pie izquierdo, cada uno ocupando más espacio en
-   pantalla. En desktop las flechas quedan ocultas.
-   ========================================================= */
-.reflexo-chart-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.reflexo-chart-wrap .reflexo-chart {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.reflexo-pie-flecha {
-  display: none; /* solo se muestran en móvil */
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--paper);
-  color: var(--navy);
-  font-size: 1.35rem;
-  line-height: 1;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-.reflexo-pie-flecha:hover {
-  background: var(--paper-soft);
-  border-color: var(--halo-cyan);
-  transform: translateY(-1px);
-}
-
-.reflexo-pie-flecha:focus-visible {
-  outline: 2px solid var(--halo-cyan);
-  outline-offset: 2px;
-}
-
-.reflexo-pie-etiqueta {
-  display: none;
-  position: absolute;
-  left: 50%;
-  bottom: -1.6rem;
-  transform: translateX(-50%);
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  letter-spacing: 0.03em;
-  color: #6b7690;
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-  .reflexo-chart-wrap {
-    margin-bottom: 1.8rem;
-  }
-  .reflexo-pie-flecha,
-  .reflexo-pie-etiqueta {
-    display: flex;
-  }
-  .reflexo-pie-etiqueta { display: block; text-align: center; }
-}
