@@ -441,44 +441,20 @@ body.cargando {
   .star-dot { animation: none; opacity: 0.5; }
 }
 
-/* ---- Rendimiento en mobile: menos blur y menos elementos animando.
-   Los celulares (sobre todo gama media/baja) son los que más sufren
-   los filtros pesados (backdrop-filter, blur, mix-blend-mode), así
-   que acá recortamos agresivamente sin perder el efecto general. ---- */
+/* ---- Rendimiento en mobile ----
+   Lo que de verdad pesaba no era tener mix-blend-mode/filter/backdrop-
+   filter (eso se compone una sola vez y es barato mientras nada cambie
+   arriba o abajo), sino que estaban debajo de una animación infinita
+   que forzaba recalcular TODO el grupo de blend en cada frame. Frenamos
+   esa animación (la causa real del consumo de GPU) y dejamos los
+   colores/efectos tal cual estaban — se ve exactamente igual, pero
+   estático en vez de animado. */
 @media (max-width: 768px) {
-  /* Los equipos de gama muy baja (ej. Samsung A02/A03) tienen el GPU
-     como cuello de botella del teléfono entero: son justamente
-     mix-blend-mode, filter y backdrop-filter los que más los castigan,
-     mucho más que pintar con la CPU. Por eso acá no los afinamos, los
-     sacamos del todo y usamos un look estático equivalente. */
-
+  /* Movimiento sutil en vez de estático: mismo transform (GPU, sin
+     repintar), pero mucho más lento para que el navegador tenga que
+     recomponer el frame con mucha menos frecuencia por segundo. */
   .hero::after {
-    animation: none;
-    mix-blend-mode: normal;
-    opacity: 0.35;
-  }
-
-  .hero::before {
-    filter: none;
-    opacity: 0.5;
-  }
-
-  .content {
-    mix-blend-mode: normal;
-    filter: none;
-  }
-
-  /* El relleno del título dependía de backdrop-filter para "invertir"
-     lo que hay detrás. Sin eso, mostramos el texto real del h1 (ya
-     está en el HTML) en blanco sólido con sombra para que se lea
-     bien sobre el fondo, y ocultamos la capa de efecto. */
-  .h1--scalingSize {
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.55);
-  }
-
-  .h1--scalingSize::before {
-    display: none;
+    animation-duration: 140s;
   }
 
   /* Dejamos solo ~15 de las 46 estrellas de fondo animando */
