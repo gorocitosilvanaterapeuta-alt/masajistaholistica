@@ -446,11 +446,48 @@ body.cargando {
    los filtros pesados (backdrop-filter, blur, mix-blend-mode), así
    que acá recortamos agresivamente sin perder el efecto general. ---- */
 @media (max-width: 768px) {
-  .hero::before { filter: blur(3px) invert(100%); }
-  .h1--scalingSize::before { backdrop-filter: blur(5px) brightness(12.5); }
+  /* Los equipos de gama muy baja (ej. Samsung A02/A03) tienen el GPU
+     como cuello de botella del teléfono entero: son justamente
+     mix-blend-mode, filter y backdrop-filter los que más los castigan,
+     mucho más que pintar con la CPU. Por eso acá no los afinamos, los
+     sacamos del todo y usamos un look estático equivalente. */
+
+  .hero::after {
+    animation: none;
+    mix-blend-mode: normal;
+    opacity: 0.35;
+  }
+
+  .hero::before {
+    filter: none;
+    opacity: 0.5;
+  }
+
+  .content {
+    mix-blend-mode: normal;
+    filter: none;
+  }
+
+  /* El relleno del título dependía de backdrop-filter para "invertir"
+     lo que hay detrás. Sin eso, mostramos el texto real del h1 (ya
+     está en el HTML) en blanco sólido con sombra para que se lea
+     bien sobre el fondo, y ocultamos la capa de efecto. */
+  .h1--scalingSize {
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+  }
+
+  .h1--scalingSize::before {
+    display: none;
+  }
 
   /* Dejamos solo ~15 de las 46 estrellas de fondo animando */
   .star-dot:nth-child(n+16) { animation: none; opacity: 0.12; }
+
+  /* box-shadow animado no corre en GPU (repinta por CPU en cada frame);
+     con pocos elementos no pesa, pero en un GPU/CPU de gama muy baja
+     cada uno suma. Dejamos solo la mitad de los sparkles dorados. */
+  .sparkle-dot:nth-child(even) { animation: none; opacity: 0; }
 }
 
 /* =========================================================
@@ -1856,4 +1893,3 @@ footer a {
   .recursos-nav__info { min-width: 150px; }
   .recursos-nav__titulo { font-size: 0.92rem; }
 }
-
